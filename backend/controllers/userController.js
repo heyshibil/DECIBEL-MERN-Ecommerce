@@ -33,6 +33,9 @@ export const registerUser = async (req, res) => {
         id: savedUser._id,
         username: savedUser.username,
         email: savedUser.email,
+        role: savedUser.role,
+        wishlist: savedUser.wishlist,
+        cart: savedUser.cart,
       },
     });
   } catch (error) {
@@ -86,4 +89,14 @@ export const loginUser = async (req, res) => {
       .status(500)
       .json({ message: "Server error. Please try again later" });
   }
+};
+
+export const logoutUser = (req, res) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+    sameSite: "strict",
+  }); 
+
+  res.status(200).json({ message: "Logged out successfully" });
 };
