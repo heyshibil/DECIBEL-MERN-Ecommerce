@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import LoginImage from "/src/assets/loginpage.webp"
+import LoginImage from "/src/assets/loginpage.webp";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
-
-
 const Login = () => {
-
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,14 +14,15 @@ const Login = () => {
 
     if (email && password) {
       try {
-       const success = await login({email, password});
-       if (success) toast.success("Login successful");
-      }
-      catch(err) {
-        toast.error(err.message)
+        const userData = await login({ email, password });
+        if (userData) {
+          toast.success(`Welcome back, ${userData.username}`);
+        }
+      } catch (err) {
+        toast.error(err.message);
       }
     }
-  } 
+  };
 
   return (
     <div className="w-full h-screen flex">
@@ -81,11 +79,7 @@ const Login = () => {
       </div>
 
       <div className="w-1/2">
-        <img
-          className="w-full h-full object-cover"
-          src={LoginImage}
-          alt=""
-        />
+        <img className="w-full h-full object-cover" src={LoginImage} alt="" />
       </div>
     </div>
   );

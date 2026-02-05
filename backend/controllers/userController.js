@@ -11,7 +11,7 @@ export const registerUser = async (req, res) => {
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: "User exists, Please login" });
+      return res.status(400).json({ message: "User already exists. Please login" });
     }
 
     // newUser instance
@@ -81,7 +81,7 @@ export const loginUser = async (req, res) => {
         },
       });
     } else {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "User not found. Verify credentials" });
     }
   } catch (error) {
     console.error("Login error:", error);
