@@ -4,8 +4,10 @@ import express from "express";
 import { connectDB } from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import wishlistRoutes from "./routes/wishlistRoutes.js"
 import cors from "cors";
 import cookieParser from "cookie-parser";
+
 
 await connectDB();
 
@@ -21,6 +23,9 @@ app.use("/api/products", productRoutes);
 
 // user router
 app.use("/api/users", userRoutes);
+
+// wishlist router
+app.use("/api/wishlist", wishlistRoutes)
 
 app.listen(PORT, () =>
   console.log(`server is running at http://localhost:${PORT}`),

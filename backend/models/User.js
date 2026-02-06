@@ -11,11 +11,16 @@ const userSchema = mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    password: { type: String, required: true, minlength: 6 },
+    password: { type: String, required: true, minlength: 8 },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     isBlocked: { type: Boolean, default: false },
-    wishlist: { type: Array, default: [] },
-    cart: { type: Array, default: [] },
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    cart: [
+      {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+        quantity: { type: Number, min: 1, default: 1 },
+      },
+    ],
   },
   { timestamps: true },
 );
