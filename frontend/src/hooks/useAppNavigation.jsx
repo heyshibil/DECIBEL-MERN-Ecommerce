@@ -7,8 +7,8 @@ export const useAppNavigation = () => {
   const goProducts = () => navigate("/products");
   const goWishlist = () => navigate("/wishlist");
   const goCart = () => navigate("/cart");
-  const goDetails = (id) => navigate(`/product/${id}`);
-  const goUser = (id) => navigate(`/user/${id}`);
+  const goDetails = (_id) => navigate(`/product/${_id}`);
+  const goUser = (_id) => navigate(`/user/${_id}`);
   const goCheckout = () => navigate(`/checkout`);
   const goOrders = (orderId) => navigate(`/orders/${orderId}`);
   const goPayment = () => navigate(`/payment/razorpay`);

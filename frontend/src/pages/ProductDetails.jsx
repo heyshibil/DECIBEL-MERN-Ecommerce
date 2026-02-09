@@ -17,35 +17,24 @@ mirage.register();
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const { products, loading } = useProducts();
-  const product = products.find((item) => item.id === id);
-  console.log(product)
+  const { products, loading: productLoading } = useProducts();
+  const product = products.find((item) => item._id === id);
+  
 
-  const { requireAuth } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { goCart } = useAppNavigation();
   const {
     cart,
     wishlist,
+    handleToggleWishlist,
     handleAddToCart,
-    handleAddToWishlist,
-    handleRemoveFromWishlist,
+    loading: wishlistCartLoading,
   } = useWishlistCart();
 
   const isCart = cart.some((item) => item.id === id);
-  const isWishlisted = wishlist.some((item) => item.id === id);
+  const isWishlisted = wishlist.some((item) => item?._id === product?._id);
 
-  // wishlist actions
-  const toggleWishlist = async ({ id, productName, type, price, img }) => {
-    // check if user exists
-    requireAuth();
-
-    if (isWishlisted) await handleRemoveFromWishlist(id);
-    else {
-      await handleAddToWishlist({ id, productName, type, price, img });
-    }
-  };
-
-  if (loading) {
+  if (wishlistCartLoading || authLoading || productLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
         <l-mirage size="60" speed="2.5" color="black"></l-mirage>
@@ -63,6 +52,18 @@ const ProductDetails = () => {
     Flagship: "bg-purple-500",
     Budget: "bg-blue-500",
     Bestseller: "bg-green-500",
+  };
+
+  // wishlist actions
+  const toggleWishlist = async (e) => {
+    e.stopPropagation();
+
+    if (!user) {
+      toast.error("Please login first");
+      return;
+    }
+
+    await handleToggleWishlist(product);
   };
 
   // cart actions
@@ -122,9 +123,12 @@ const ProductDetails = () => {
             <div id="button-box" className="flex gap-4 lg:mt-10 items-center">
               <div className="bg-gray-100 p-1 rounded-full">
                 <FiHeart
-                  onClick={() => toggleWishlist({id :product.id, productName : product.productName, type: product.type, price: product.price, img: product.image })}
-
-                  className={isWishlisted ? "w-8 h-8 p-1 text-lg fill-red-500 text-red-500 cursor-pointer" : "w-8 h-8 p-1 text-gray-500 rounded-full text-lg cursor-pointer"}
+                  onClick={toggleWishlist}
+                  className={
+                    isWishlisted
+                      ? "w-8 h-8 p-1 text-lg fill-red-500 text-red-500 cursor-pointer"
+                      : "w-8 h-8 p-1 text-gray-500 rounded-full text-lg cursor-pointer"
+                  }
                 />
               </div>
 

@@ -42,7 +42,7 @@ const Card = (product) => {
           className="w-full max-h-72 h-full object-cover rounded-xl cursor-pointer"
           src={img}
           alt=""
-          onClick={() => goDetails(id)}
+          onClick={() => goDetails(_id)}
         />
       </div>
       <div id="lower" className="w-full flex items-start flex-col gap-1">
