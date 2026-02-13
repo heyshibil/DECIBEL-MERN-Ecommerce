@@ -2,46 +2,75 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import api from "../services/api";
 import { useAuth } from "./AuthContext";
 import toast from "react-hot-toast";
+import { createOrderApi, getOrdersApi } from "../services/orderService";
 const OrderContext = createContext();
 
 export const OrderProvider = ({ children }) => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
   // load orders from db
   useEffect(() => {
-    if (!user?.id) return;
-    const loadUserOrders = async () => {
-      const res = await api.get(`/orders?userId=${user.id}`);
-      setOrders(res.data);
+    if (!user) {
+      setOrders([]);
+      return;
+    }
+
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        const data = await getOrdersApi();
+        setOrders(data);
+      } catch (error) {
+        toast.error(
+          error?.response?.data?.message ||
+            "Server is unreachable. Try again later",
+        );
+      } finally {
+        setLoading(false);
+      }
     };
 
-    loadUserOrders();
-  }, [user?.id]);
+    fetchOrders();
+  }, [user]);
 
   // create new order
   const createNewOrder = async (orderData) => {
-    const res = await api.post(`/orders`, orderData);
-    setOrders((prev) => [...prev, res.data]);
+    try {
+      setLoading(true)
+      const newOrder = await createOrderApi(orderData);
 
-    return res.data;
+      // update new order on the top
+      setOrders((prev) => [newOrder, ...prev]);
+      return newOrder;
+    } 
+    catch (error) {
+      toast.error(error?.response?.data?.message || "Payment processing failed");
+      
+      // throw error to stop processing
+      throw error;
+    }
+    finally {
+      setLoading(false)
+    }
   };
 
   //cancel order
   const cancelOrder = async (orderId) => {
     setOrders((prev) =>
       prev.map((order) =>
-        order.id === orderId ? { ...order, status: "Cancelled" } : order
-      )
+        order._id === orderId ? { ...order, status: "Cancelled" } : order,
+      ),
     );
 
     try {
       await api.patch(`/orders/${orderId}`, { status: "Cancelled" });
-      toast.success(`Order with id ${orderId} has been cancelled`)
+      toast.success(`Order with id ${orderId} has been cancelled`);
     } catch (error) {
-      console.error("Failed to cancel:", error)
-      toast.error(`Failed to cancel order with ${orderId}`)
-    } 
+      console.error("Failed to cancel:", error);
+      toast.error(`Failed to cancel order with ${orderId}`);
+    }
   };
 
   return (

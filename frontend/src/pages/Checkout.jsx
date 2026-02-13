@@ -26,7 +26,7 @@ const Checkout = () => {
 
   // load datas from localstorage
   useEffect(() => {
-    const saved = localStorage.getItem(`addressOf${user.id}`);
+    const saved = localStorage.getItem(`addressOf${user._id}`);
     if (saved) {
       setFormData(JSON.parse(saved));
     }
@@ -38,7 +38,7 @@ const Checkout = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    localStorage.setItem(`addressOf${user.id}`, JSON.stringify(formData));
+    localStorage.setItem(`addressOf${user._id}`, JSON.stringify(formData));
     goPayment();
   };
 

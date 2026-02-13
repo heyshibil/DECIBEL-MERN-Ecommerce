@@ -8,23 +8,28 @@ import { useOrders } from "../context/OrdersContext";
 const Payment = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { total, cart, handleClearCart } = useWishlistCart();
+  const { total, cart, handleClearCart, subTotal, gst } = useWishlistCart();
   const [upi, setUPI] = useState("");
   const { goCheckout, goOrders } = useAppNavigation();
   const { createNewOrder } = useOrders();
   const { user } = useAuth();
+  const [newOrder, setNewOrder] = useState(null);
+
+
   const storedData = JSON.parse(localStorage.getItem(`addressOf${user._id}`));
 
-  // Handle processing timeout
-  useEffect(() => {
-    if (isProcessing && !isSuccess) {
-      const timer = setTimeout(() => {
-        setIsProcessing(false);
-        setIsSuccess(true);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [isProcessing, isSuccess]);
+  // destructuring storedData
+    const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    address,
+    country,
+    city,
+    state,
+    postalCode,
+  } = storedData;
 
   const handlePayment = async () => {
     const upiRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$/;
@@ -37,35 +42,32 @@ const Payment = () => {
       toast.error("Enter a valid UPI ID");
       return;
     }
-    setIsProcessing(true);
 
-    // creating new order
-    const orderData = {
-      id: "ORD-" + Date.now().toString().slice(-5),
-      userId: user._id,
-      items: cart,
-      total: total,
-      status: "Ordered",
-      date: new Date().toISOString(),
-      address: storedData
-    };
+    try {
+      setIsProcessing(true);
 
-    // adding to db
-    await createNewOrder(orderData);
+      // creating new order
+      const orderData = {
+        items: cart,
+        amount: {
+          subTotal,
+          gst,
+          total,
+        },
+        address: storedData,
+        upiId: upi,
+      };
+
+      const data = await createNewOrder(orderData);
+      // Set success only after successful order creation
+      setIsSuccess(true);
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error(error?.response?.data?.message || "Payment processing failed. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
-
-  const formData = storedData;
-  const {
-    firstName,
-    lastName,
-    email,
-    phone,
-    address,
-    country,
-    city,
-    state,
-    postalCode,
-  } = formData;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center pt-16 pb-12">

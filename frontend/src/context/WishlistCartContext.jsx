@@ -46,7 +46,7 @@ export const WishlistCartProvider = ({ children }) => {
         console.error(error);
         toast.error(
           error?.response?.data?.message ||
-            "Server is unreachable. Try again later",
+            "Server is unreachable. Try again later"
         );
       } finally {
         setLoading(false);
@@ -137,7 +137,7 @@ export const WishlistCartProvider = ({ children }) => {
 
   // clear cart
   const handleClearCart = () => {
-    clearCart(user.id);
+    clearCart(user._id);
     setCart([]);
   };
 
