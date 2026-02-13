@@ -22,6 +22,10 @@ export const createOrder = async (req, res) => {
   try {
     const { items, amount, address, upiId } = req.body;
 
+    if (!items || items.length === 0) {
+      return res.status(400).json({ message: "Your cart is empty." });
+    }
+
     //generate custom orderId
     const generatedOrderId = `ORD-${Date.now().toString().slice(-6)}${Math.random().toString(36).toUpperCase().slice(-3)}`;
 

@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     amount: {
-      subtotal: { type: Number, required: true },
+      subTotal: { type: Number, required: true },
       gst: { type: Number, required: true },
       total: { type: Number, required: true },
     },

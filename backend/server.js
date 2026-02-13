@@ -32,7 +32,7 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/cart", cartRoutes);
 
 // order router
-app.use("/api/order", orderRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.listen(PORT, () =>
   console.log(`server is running at http://localhost:${PORT}`),
