@@ -3,7 +3,9 @@ import { Order } from "../models/Order.js";
 // Get allOrders
 export const getAllOrders = async (req, res) => {
   try {
-    const allOrders = await Order.find({}).sort({ createdAt: -1 });
+    const allOrders = await Order.find({})
+      .populate("items.product")
+      .sort({ createdAt: -1 });
 
     if (!allOrders || allOrders.length === 0) return res.status(200).json([]);
 
