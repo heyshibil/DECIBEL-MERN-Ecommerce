@@ -7,7 +7,7 @@ import { loginSchema, registerSchema } from "../utils/validation";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const { goHome, goLogin } = useAppNavigation();
+  const { goHome, goLogin, goAdminDashboard } = useAppNavigation();
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -74,7 +74,10 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
       localStorage.setItem("userInfo", JSON.stringify(userData));
 
-      goHome();
+      // if admin navigate to admin dashboard
+      if (userData.role === "admin") goAdminDashboard();
+      else goHome();
+  
       return userData;
     } catch (error) {
       console.error(error);

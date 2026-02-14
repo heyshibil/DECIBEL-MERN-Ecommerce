@@ -7,19 +7,17 @@ import {
   FiUsers,
   FiLogOut,
 } from "react-icons/fi";
+import { useAuth } from "../../context/AuthContext";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
 
 const AdminLayout = () => {
-  const admin = localStorage.getItem("admin");
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("admin");
-    navigate("/admin/login");
-  };
-
+  const { user, isAdmin, loading } = useAuth();
+  const { goLogin } = useAppNavigation();
   useEffect(() => {
-    if (!admin) navigate("/admin/login");
-  }, [admin,navigate]);
+    if (!loading && (!user || !isAdmin)) {
+      goLogin();
+    }
+  }, [user, isAdmin, loading, goLogin]);
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -95,7 +93,7 @@ const AdminLayout = () => {
         <div className="p-4 border-t">
           <button
             className="w-full flex items-center gap-3 text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 ease-in-out duration-200"
-            onClick={handleLogout}
+            onClick={() => navigate("/login")}
           >
             <FiLogOut size={20} />
             Logout

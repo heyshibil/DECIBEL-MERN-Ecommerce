@@ -15,6 +15,9 @@ export const useAppNavigation = () => {
   const goLogin = () => navigate("/login");
   const goRegister = () => navigate("/register");
 
+  // admin navigation
+  const goAdminDashboard  = () => navigate("/admin/dashboard");
+
   return {
     goHome,
     goProducts,
@@ -27,5 +30,6 @@ export const useAppNavigation = () => {
     goPayment,
     goLogin,
     goRegister,
+    goAdminDashboard
   };
 };

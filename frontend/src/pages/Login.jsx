@@ -15,7 +15,8 @@ const Login = () => {
     if (email && password) {
       try {
         const userData = await login({ email, password });
-        if (userData) {
+
+        if (userData.role === "user") {
           toast.success(`Welcome back, ${userData.username}`);
         }
       } catch (err) {
