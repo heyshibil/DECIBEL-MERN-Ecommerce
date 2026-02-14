@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FiLock, FiUnlock } from "react-icons/fi";
 import { useAdminStats } from "../context/AdminStatsContext";
 import api from "../../services/api";
@@ -33,8 +33,8 @@ const AdminUsers = () => {
 
         setUsersList((prev) =>
           prev.map((user) =>
-            user.id === userId ? { ...user, isBlocked: !user.isBlocked } : user
-          )
+            user.id === userId ? { ...user, isBlocked: !user.isBlocked } : user,
+          ),
         );
       }
     } catch (error) {
@@ -44,12 +44,15 @@ const AdminUsers = () => {
   };
 
   // filtered products
-  const filteredUsers = usersList.filter(
-    (user) =>
-      user.id.toLowerCase().toString().includes(searchQuery) ||
-      user.username.toLowerCase().toString().includes(searchQuery) ||
-      user.email.toLowerCase().toString().includes(searchQuery)
-  );
+  const filteredUsers = useMemo(() => {
+    const query = searchQuery.toLowerCase();
+    return usersList.filter(
+      (u) =>
+        u._id.toLowerCase().includes(query) ||
+        u.username.toLowerCase().includes(query) ||
+        u.email.toLowerCase().includes(query),
+    );
+  }, [usersList, searchQuery]);
 
   const statusColors = {
     true: "text-green-600",
@@ -81,7 +84,7 @@ const AdminUsers = () => {
           <thead>
             <tr className="border-b text-gray-600">
               <th className="py-2 w-[15%]">User ID</th>
-              <th className="py-2 w-[20%]">Username</th>
+              <th className="py-2 w-[10%]">Username</th>
               <th className="py-2 w-[30%]">Email</th>
               <th className="py-2 w-[15%]">Status</th>
               <th className="py-2 w-[20%]">Action</th>
@@ -90,8 +93,8 @@ const AdminUsers = () => {
 
           <tbody className="text-gray-700">
             {filteredUsers.map((user) => (
-              <tr key={user.id} className="border-b">
-                <td className="py-3 font-medium">{user.id}</td>
+              <tr key={user._id} className="border-b">
+                <td className="py-3 font-medium">{user._id}</td>
 
                 <td className="py-3">{user.username}</td>
 
@@ -109,7 +112,7 @@ const AdminUsers = () => {
 
                 <td className="py-3 text-center">
                   <button
-                    onClick={() => toggleBlock(user.id, user.isBlocked)}
+                    onClick={() => toggleBlock(user._id, user.isBlocked)}
                     className={`w-40 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium shadow-sm transition
     ${
       user.isBlocked
