@@ -1,5 +1,18 @@
 import { Order } from "../models/Order.js";
 
+// Get allOrders
+export const getAllOrders = async (req, res) => {
+  try {
+    const allOrders = await Order.find({}).sort({ createdAt: -1 });
+
+    if (!allOrders || allOrders.length === 0) return res.status(200).json([]);
+
+    return res.status(200).json(allOrders);
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to fetch all orders" });
+  }
+};
+
 // Get order
 export const getOrders = async (req, res) => {
   try {
