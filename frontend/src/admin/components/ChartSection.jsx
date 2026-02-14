@@ -13,14 +13,12 @@ const getWeekNumber = (d) => {
 const aggregateRevenue = (orders, period) => {
   const grouped = {};
   orders.forEach((order) => {
-    const d = new Date(order.date);
+    const d = new Date(order.createdAt);
+    if (isNaN(d.getTime())) return;
+
     let key = "";
     if (period === "day") {
-      const d = new Date(order.date);
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      key = `${year}-${month}-${day}`;
+      key = d.toISOString().split("T")[0]; // Simpler way to get YYYY-MM-DD
     } else if (period === "week")
       key = `${d.getFullYear()}-W${getWeekNumber(d)}`;
     else if (period === "month") {
@@ -28,12 +26,17 @@ const aggregateRevenue = (orders, period) => {
       key = `${d.getFullYear()}-${month}`;
     }
     if (!grouped[key]) grouped[key] = 0;
-    grouped[key] += parseFloat(order.total) || 0;
+    grouped[key] += parseFloat(order.amount?.total) || 0;
   });
-  return Object.entries(grouped).map(([label, revenue]) => ({
-    label,
-    revenue,
-  }));
+  return (
+    Object.entries(grouped)
+      //Sort entries so the chart flows chronologically
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([label, revenue]) => ({
+        label,
+        revenue,
+      }))
+  );
 };
 
 // Aggregate sales by category for pie chart
@@ -41,8 +44,8 @@ const aggregateCategorySales = (orders) => {
   const categorySales = {};
 
   orders.forEach((order) => {
-    order.items.forEach((item) => {
-      const type = item.type || "Uncategorized";
+    order.items?.forEach((item) => {
+      const type = item.product?.type || "Other";
       if (!categorySales[type]) categorySales[type] = 0;
       categorySales[type] += parseFloat(item.price) || 0;
     });
@@ -58,8 +61,7 @@ const ChartSection = () => {
   const [period, setPeriod] = useState("day");
   const [chartData, setChartData] = useState([]);
   const [pieData, setPieData] = useState({ series: [], labels: [] });
-
-  const { stats } = useAdminStats() || {};
+  const { stats, loading } = useAdminStats() || {};
   const orders = stats?.orders || [];
 
   useEffect(() => {
@@ -68,6 +70,21 @@ const ChartSection = () => {
     setChartData(aggregateRevenue(orders, period));
     setPieData(aggregateCategorySales(orders));
   }, [orders, period]);
+
+  if (loading)
+    return (
+      <div className="h-64 flex items-center justify-center">
+        Loading Analytics...
+      </div>
+    );
+
+  if (orders.length === 0) {
+    return (
+      <div className="mt-10 p-10 bg-white rounded-2xl text-center text-gray-400 border-2 border-dashed">
+        No sales data available yet to display charts.
+      </div>
+    );
+  }
 
   // line chart
   const series = [
@@ -129,9 +146,9 @@ const ChartSection = () => {
     },
     dataLabels: {
       style: {
-        fontSize: "12px", 
-        fontWeight: "500", 
-        colors: ["#ffff"], 
+        fontSize: "12px",
+        fontWeight: "500",
+        colors: ["#ffff"],
         textAnchor: "center",
       },
     },
