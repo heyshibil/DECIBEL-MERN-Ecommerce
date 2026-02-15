@@ -65,7 +65,7 @@ const Orders = () => {
                         className="h-24 w-24 rounded-lg overflow-hidden"
                       >
                         <img
-                          src={`/${it.image}`}
+                          src={it.image}
                           alt={it.productName}
                           className="w-full h-full object-cover"
                         />

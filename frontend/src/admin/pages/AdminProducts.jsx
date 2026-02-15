@@ -5,7 +5,13 @@ import { useAdminStats } from "../context/AdminStatsContext";
 import AddProducts from "../components/AddProducts";
 import api from "../../services/api";
 import { toast } from "react-toastify";
-AddProducts;
+
+// Helper function to resolve image path (handles both Cloudinary URLs and relative paths)
+const getImagePath = (imagePath) => {
+  if (!imagePath) return null;
+  if (imagePath.startsWith("http")) return imagePath; // Cloudinary URL
+  return `/${imagePath}`; // Relative path
+};
 
 const AdminProducts = () => {
   const { stats, setStats } = useAdminStats();
@@ -21,6 +27,7 @@ const AdminProducts = () => {
     model: "",
     rating: "",
     description: "",
+    sku: "",
   };
 
   const [isAdding, setIsAdding] = useState(false);
@@ -34,6 +41,7 @@ const AdminProducts = () => {
     model: "",
     rating: "3",
     description: "",
+    sku: "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -151,7 +159,7 @@ const AdminProducts = () => {
                 <td className="py-3">
                   <div className="flex items-center justify-center w-20 h-20 mx-3 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                     <img
-                      src={`/${product.image}`}
+                      src={getImagePath(product.image)}
                       alt={product.productName}
                       className="w-full h-full object-cover"
                     />

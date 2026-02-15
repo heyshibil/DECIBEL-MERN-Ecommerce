@@ -79,7 +79,7 @@ const ProductDetails = () => {
             <div id="productImg-box" className="w-3/4 lg:h-[550px]">
               <img
                 className="h-full w-full object-cover"
-                src={`/${product.image}`}
+                src={product.image}
                 alt={product.productName}
               />
             </div>

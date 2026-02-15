@@ -4,6 +4,9 @@ const api = axios.create({
   baseURL: "http://localhost:5000/api",
   timeout: 5000,
   withCredentials: true,
+  headers: {
+    "Accept": "application/json",
+  },
 });
 
 api.interceptors.response.use(

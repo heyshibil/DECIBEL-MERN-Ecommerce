@@ -4,6 +4,13 @@ import ManualDropdown from "./ManualDropdown";
 import api from "../../services/api";
 import { toast } from "react-toastify";
 
+// Helper function to resolve image path (handles both Cloudinary URLs and relative paths)
+const getImagePath = (imagePath) => {
+  if (!imagePath) return null;
+  if (imagePath.startsWith("http")) return imagePath; // Cloudinary URL
+  return `/${imagePath}`; // Relative path
+};
+
 const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -16,7 +23,7 @@ const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
       newProduct.image &&
       typeof newProduct.image === "string"
     ) {
-      setImagePreview(`/${newProduct.image}`);
+      setImagePreview(getImagePath(newProduct.image));
     }
   }, [newProduct.image, mode, imageFile]);
 
@@ -69,27 +76,30 @@ const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
     }
 
     try {
-      const finalProduct = {
-        id: "PROD-" + Date.now().toString().slice(-4),
-        productName: newProduct.productName,
-        type: newProduct.type,
-        price: newProduct.price,
-        image: `images/${newProduct.image}`,
-        status: newProduct.status,
-        brand: newProduct.brand,
-        model: newProduct.model,
-        rating: newProduct.rating,
-        description: newProduct.description,
-      };
+      const formData = new FormData();
 
-      const response = await api.post("/products", finalProduct);
+      //  append all text fields
+      formData.append("productName", newProduct.productName);
+      formData.append("type", newProduct.type);
+      formData.append("price", newProduct.price);
+      formData.append("brand", newProduct.brand);
+      formData.append("model", newProduct.model);
+      formData.append("rating", newProduct.rating);
+      formData.append("status", newProduct.status);
+      formData.append("description", newProduct.description);
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      const response = await api.post("/products", formData);
 
       if (response.status === 201 || response.status === 200) {
-        toast.success("Product added successfully");
+        toast.success("Product added to Decibel inventory!");
         onClose(false);
       }
     } catch (error) {
-      toast.error("Failed to add");
+      toast.error(error.response?.data?.message || "Upload failed");
       console.error("Failed to add products:", error);
     }
   };
@@ -126,6 +136,20 @@ const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
             name="productName"
             onChange={handleChange}
             value={newProduct.productName}
+          />
+        </div>
+
+        {/* sku */}
+        <div className="flex flex-col">
+          <label className="text-gray-500 text-sm mb-1">SKU {mode === "add" && <span className="text-xs text-gray-400">(Auto-generated)</span>}</label>
+          <input
+            type="text"
+            className="px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-700 disabled:bg-gray-200 disabled:cursor-not-allowed"
+            placeholder="PROD-XXXX"
+            name="sku"
+            onChange={handleChange}
+            value={newProduct.sku}
+            disabled={mode === "add"}
           />
         </div>
 
