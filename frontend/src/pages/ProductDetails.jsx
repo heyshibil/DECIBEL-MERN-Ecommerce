@@ -13,6 +13,7 @@ import { useAuth } from "../context/AuthContext";
 import { useWishlistCart } from "../context/WishlistCartContext";
 import { useAppNavigation } from "../hooks/useAppNavigation";
 import { toast } from "react-toastify";
+import { getImagePath } from "../utils/getImage";
 mirage.register();
 
 const ProductDetails = () => {
@@ -42,9 +43,11 @@ const ProductDetails = () => {
   }
 
   if (!product) {
-    <div className="w-full h-screen flex items-center justify-center">
-      <p className="text-3xl semibold">Product Not Found</p>
-    </div>;
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <p className="text-3xl semibold">Product Not Found</p>
+      </div>
+    );
   }
 
   const statusColors = {
@@ -76,12 +79,28 @@ const ProductDetails = () => {
       <div className="w-11/12 mx-auto pt-6 lg:pt-12">
         <div className="w-full flex justify-between">
           <div id="left" className="w-1/2 flex items-center">
-            <div id="productImg-box" className="w-3/4 lg:h-[550px]">
-              <img
-                className="h-full w-full object-cover"
-                src={product.image}
-                alt={product.productName}
-              />
+            <div
+              id="productImg-box"
+              className="w-3/4 lg:h-[550px] bg-gray-200 rounded flex items-center justify-center"
+            >
+              {product.image ? (
+                <img
+                  className="h-full w-full object-cover"
+                  src={getImagePath(product?.image)}
+                  alt={product.productName}
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                    e.target.parentElement.innerHTML =
+                      '<div class="text-center"><p class="text-gray-500 text-lg font-medium">Image Not Available</p></div>';
+                  }}
+                />
+              ) : (
+                <div className="text-center">
+                  <p className="text-gray-500 text-lg font-medium">
+                    Image Not Available
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

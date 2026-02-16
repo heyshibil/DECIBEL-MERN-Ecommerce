@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import EmptyMessage from "../components/EmptyMessage";
 import { useOrders } from "../context/OrdersContext";
 import AlertMessage from "../components/AlertMessage";
+import { getImagePath } from "../utils/getImage";
 
 const Orders = () => {
   const { orders, cancelOrder } = useOrders();
@@ -65,7 +66,7 @@ const Orders = () => {
                         className="h-24 w-24 rounded-lg overflow-hidden"
                       >
                         <img
-                          src={it.image}
+                          src={getImagePath(it?.image)}
                           alt={it.productName}
                           className="w-full h-full object-cover"
                         />

@@ -12,7 +12,7 @@ export const ProductProvider = ({ children }) => {
     const fetchAllData = async () => {
       try {
         const { data: products } = await api.get("/products");
-        const bestProducts = products.filter(product => product.status === "Bestseller").slice(4);
+        const bestProducts = products.filter(product => product.status === "Bestseller").slice(0, 4);
 
         setProducts(products);
         setBestsellers(bestProducts);
