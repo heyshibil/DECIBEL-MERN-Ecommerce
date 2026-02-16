@@ -5,9 +5,8 @@ import api from "../../services/api";
 import { toast } from "react-toastify";
 
 const AdminUsers = () => {
-  const { stats } = useAdminStats();
+  const { stats, refreshStats } = useAdminStats();
   const [usersList, setUsersList] = useState([]);
-  const [isBlock, setIsBlock] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   // fetch users
@@ -16,29 +15,19 @@ const AdminUsers = () => {
   }, [stats.users]);
 
   // toggle block
-  const toggleBlock = async (userId, isBlocked) => {
+  const toggleBlock = async (userId, currentBlockStatus) => {
     try {
-      const user = await api.get(`/users/${userId}`);
-      const userName = user.data.username;
-
-      const response = await api.patch(`/users/${userId}`, {
-        isBlocked: !isBlocked,
+      const response = await api.patch(`/users/block/${userId}`, {
+        isBlocked: !currentBlockStatus,
       });
 
-      // update the block state
-      setIsBlock(!isBlock);
-
-      if (response.status === 200 || response.status === 201) {
-        toast.info(`User ${userName} is ${isBlock ? "Blocked" : "Unblocked"}`);
-
-        setUsersList((prev) =>
-          prev.map((user) =>
-            user.id === userId ? { ...user, isBlocked: !user.isBlocked } : user,
-          ),
-        );
+      if (response.status === 200) {
+        toast.success(`User ${currentBlockStatus ? "Unblocked" : "blocked"} successfully`);
+        refreshStats();
       }
+
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(error.response?.data?.message || "Failed to update user status");
       console.error("Failed to update:", error);
     }
   };
