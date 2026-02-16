@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useWishlistCart } from "../context/WishlistCartContext";
 import { useAppNavigation } from "../hooks/useAppNavigation";
-import { toast } from "react-toastify";
+import { showError } from "../utils/toastService";
 import { useAuth } from "../context/AuthContext";
 import { useOrders } from "../context/OrdersContext";
 
@@ -32,12 +32,12 @@ const Payment = () => {
   const handlePayment = async () => {
     const upiRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$/;
     if (upi === "") {
-      toast.error("Enter your UPI ID");
+      showError("Enter your UPI ID");
       return;
     }
 
     if (!upiRegex.test(upi)) {
-      toast.error("Enter a valid UPI ID");
+      showError("Enter a valid UPI ID");
       return;
     }
 
@@ -63,7 +63,7 @@ const Payment = () => {
       setIsSuccess(true);
     } catch (error) {
       console.error("Payment error:", error);
-      toast.error(
+      showError(
         error?.response?.data?.message ||
           "Payment processing failed. Please try again.",
       );

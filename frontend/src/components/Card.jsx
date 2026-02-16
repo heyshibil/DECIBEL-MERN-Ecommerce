@@ -1,5 +1,5 @@
 import { FiHeart } from "react-icons/fi";
-import { toast } from "react-toastify";
+import { showError } from "../utils/toastService";
 import { useAuth } from "../context/AuthContext";
 import { useWishlistCart } from "../context/WishlistCartContext";
 import { useAppNavigation } from "../hooks/useAppNavigation";
@@ -17,14 +17,14 @@ const Card = (product) => {
   const toggleCart = async (e) => {
     e.stopPropagation();
 
-    if (!user) return toast.error("Please login first");
+    if (!user) return showError("Please login first");
     await handleAddToCart(_id);
   };
 
   const toggleWishlist = async (e) => {
     e.stopPropagation();
 
-    if (!user) return toast.error("Please login first");
+    if (!user) return showError("Please login first");
     await handleToggleWishlist(product);
   };
 

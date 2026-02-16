@@ -12,7 +12,7 @@ import { mirage } from "ldrs";
 import { useAuth } from "../context/AuthContext";
 import { useWishlistCart } from "../context/WishlistCartContext";
 import { useAppNavigation } from "../hooks/useAppNavigation";
-import { toast } from "react-toastify";
+import { showError } from "../utils/toastService";
 import { getImagePath } from "../utils/getImage";
 mirage.register();
 
@@ -60,13 +60,13 @@ const ProductDetails = () => {
   const toggleWishlist = async (e) => {
     e.stopPropagation();
 
-    if (!user) return toast.error("Please login first");
+    if (!user) return showError("Please login first");
     await handleToggleWishlist(product);
   };
 
   // cart actions
   const toggleCart = async (productId) => {
-    if (isCart) return toast.error("Item already added to cart");
+    if (isCart) return showError("Item already added to cart");
     else {
       await handleAddToCart(productId);
       goCart();

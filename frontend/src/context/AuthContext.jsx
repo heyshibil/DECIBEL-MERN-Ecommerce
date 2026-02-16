@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../services/api";
 import { useAppNavigation } from "../hooks/useAppNavigation";
-import toast from "react-hot-toast";
+import { showError } from "../utils/toastService";
 import { loginSchema, registerSchema } from "../utils/validation";
 
 const AuthContext = createContext();
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
     if (!validation.success) {
       const errorMessage = validation.error.issues[0].message;
-      toast.error(errorMessage);
+      showError(errorMessage);
       return;
     }
 
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
       goHome();
       return userData;
     } catch (error) {
-      toast.error(
+      showError(
         error?.response?.data?.message ||
           "Server is unreachable. Try again later",
       );
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
 
     if (!validation.success) {
       const errorMessage = validation.error.issues[0].message;
-      toast.error(errorMessage);
+      showError(errorMessage);
       return;
     }
 
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
       return userData;
     } catch (error) {
       console.error(error);
-      toast.error(
+      showError(
         error?.response?.data?.message ||
           "Server is unreachable. Try again later",
       );
@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }) => {
 
       goLogin();
     } catch (err) {
-      toast.error("Failed to logout. try again later");
+      showError("Failed to logout. try again later");
       console.error("Logout failed:", err);
     }
   };

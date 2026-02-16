@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import StatusDropdown from "../components/StatusDropdown";
 import { useAdminStats } from "../context/AdminStatsContext";
 import api from "../../services/api";
-import toast from "react-hot-toast";
+import { showError, showSuccess } from "../../utils/toastService";
 
 const AdminOrders = () => {
   const { stats, refreshStats } = useAdminStats();
@@ -34,10 +34,10 @@ const AdminOrders = () => {
 
       if (response.status === 200) {
         refreshStats();
-        toast.success(`Order status updated to ${newStatus}`);
+        showSuccess(`Order status updated to ${newStatus}`);
       }
     } catch (error) {
-      toast.error("Failed to update status");
+      showError("Failed to update status");
       console.error("Failed to update order status:", error);
     }
   };

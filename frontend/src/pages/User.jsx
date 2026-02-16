@@ -8,7 +8,7 @@ import { IoClose } from "react-icons/io5";
 import { useAuth } from "../context/AuthContext";
 import { BsBoxSeam } from "react-icons/bs";
 import api from "../services/api";
-import { toast } from "react-toastify";
+import { showError, showSuccess } from "../utils/toastService";
 import { useOrders } from "../context/OrdersContext";
 import { useAppNavigation } from "../hooks/useAppNavigation";
 
@@ -42,11 +42,11 @@ const User = () => {
 
      updateUser(res.data);
 
-      toast.success("Username updated Successfully");
+      showSuccess("Username updated Successfully");
     } catch (error) {
       const errorMessage = error?.response?.data?.message || "An unexpected error happen"
       console.error("Error while updating username:", error);
-      toast.error(errorMessage);
+      showError(errorMessage);
     } finally {
       setSaving(false);
       setEditingUsername(false);
@@ -59,11 +59,11 @@ const User = () => {
       const res = await api.patch("/users/profile", { email: newEmail });
 
       updateUser(res.data);
-      toast.success("Email updated Successfully");
+      showSuccess("Email updated Successfully");
     } catch (error) {
       const errorMessage = error?.response?.data?.message || "An unexpected error happen"
       console.error("Error while updating email:", error);
-      toast.error(errorMessage);
+      showError(errorMessage);
     } finally {
       setSaving(false);
       setEditingEmail(false);

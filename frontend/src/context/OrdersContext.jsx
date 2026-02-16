@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import api from "../services/api";
 import { useAuth } from "./AuthContext";
-import toast from "react-hot-toast";
+import { showError, showSuccess } from "../utils/toastService";
 import { createOrderApi, getOrdersApi } from "../services/orderService";
 const OrderContext = createContext();
 
@@ -23,7 +23,7 @@ export const OrderProvider = ({ children }) => {
         const data = await getOrdersApi();
         setOrders(data);
       } catch (error) {
-        toast.error(
+        showError(
           error?.response?.data?.message ||
             "Server is unreachable. Try again later",
         );
@@ -46,7 +46,7 @@ export const OrderProvider = ({ children }) => {
       return newOrder;
     } 
     catch (error) {
-      toast.error(error?.response?.data?.message || "Payment processing failed");
+      showError(error?.response?.data?.message || "Payment processing failed");
       
       // throw error to stop processing
       throw error;
@@ -66,10 +66,10 @@ export const OrderProvider = ({ children }) => {
 
     try {
       await api.patch(`/orders/${orderId}`, { status: "Cancelled" });
-      toast.success(`Order with id ${orderId} has been cancelled`);
+      showSuccess(`Order with id ${orderId} has been cancelled`);
     } catch (error) {
       console.error("Failed to cancel:", error);
-      toast.error(`Failed to cancel order with ${orderId}`);
+      showError(`Failed to cancel order with ${orderId}`);
     }
   };
 

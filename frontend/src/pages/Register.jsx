@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LoginImage from "/src/assets/loginpage.webp";
 import { useAuth } from "../context/AuthContext";
-import toast from "react-hot-toast";
+import { showError, showSuccess } from "../utils/toastService";
 
 const Register = () => {
   const { register } = useAuth();
@@ -18,11 +18,11 @@ const Register = () => {
     try {
       const userData = await register({ username, email, password, confirmPassword });
       if (userData) {
-        toast.success(`Login successful! Welcome, ${userData.username}`);
+        showSuccess(`Login successful! Welcome, ${userData.username}`);
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to register. Please try again");
+      showError("Failed to register. Please try again");
     }
   };
 

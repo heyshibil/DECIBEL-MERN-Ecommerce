@@ -4,7 +4,7 @@ import ManualDropdown from "../components/ManualDropdown";
 import { useAdminStats } from "../context/AdminStatsContext";
 import AddProducts from "../components/AddProducts";
 import api from "../../services/api";
-import { toast } from "react-toastify";
+import { showError, showSuccess } from "../../utils/toastService";
 
 // Helper function to resolve image path (handles both Cloudinary URLs and relative paths)
 const getImagePath = (imagePath) => {
@@ -81,11 +81,11 @@ const AdminProducts = () => {
       const response = await api.delete(`/products/${product._id}`);
 
       if (response.status === 200) {
-        toast.success("Product deleted successfully");
+        showSuccess("Product deleted successfully");
         refreshStats();
       }
     } catch (error) {
-      toast.error("Failed to delete the product");
+      showError("Failed to delete the product");
       console.error("Failed to delete product:", error);
     }
   };

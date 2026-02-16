@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import ManualDropdown from "./ManualDropdown";
 import api from "../../services/api";
-import { toast } from "react-toastify";
+import { showError, showSuccess } from "../../utils/toastService";
 import { useAdminStats } from "../context/AdminStatsContext";
 
 // Helper function to resolve image path (handles both Cloudinary URLs and relative paths)

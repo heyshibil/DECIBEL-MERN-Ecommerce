@@ -5,7 +5,7 @@ import SubHead from "../components/SubHead";
 import { FiArrowLeft } from "react-icons/fi";
 import { useAppNavigation } from "../hooks/useAppNavigation";
 import { useWishlistCart } from "../context/WishlistCartContext";
-import { toast } from "react-toastify";
+import { showError, showSuccess } from "../utils/toastService";
 import { useAuth } from "../context/AuthContext";
 
 const Checkout = () => {

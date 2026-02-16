@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { FiLock, FiUnlock } from "react-icons/fi";
 import { useAdminStats } from "../context/AdminStatsContext";
 import api from "../../services/api";
-import { toast } from "react-toastify";
+import { showError, showSuccess } from "../../utils/toastService";
 
 const AdminUsers = () => {
   const { stats, refreshStats } = useAdminStats();
@@ -22,12 +22,12 @@ const AdminUsers = () => {
       });
 
       if (response.status === 200) {
-        toast.success(`User ${currentBlockStatus ? "Unblocked" : "blocked"} successfully`);
+        showSuccess(`User ${currentBlockStatus ? "Unblocked" : "blocked"} successfully`);
         refreshStats();
       }
 
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to update user status");
+      showError(error.response?.data?.message || "Failed to update user status");
       console.error("Failed to update:", error);
     }
   };

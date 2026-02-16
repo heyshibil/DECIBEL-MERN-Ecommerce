@@ -8,7 +8,7 @@ import {
   updateCartApi,
 } from "../services/cartService";
 import { useAuth } from "./AuthContext";
-import { toast, Slide } from "react-toastify";
+import { showError, showSuccess } from "../utils/toastService";
 
 const WishlistCartContext = createContext();
 
@@ -44,7 +44,7 @@ export const WishlistCartProvider = ({ children }) => {
         setCart(cartData);
       } catch (error) {
         console.error(error);
-        toast.error(
+        showError(
           error?.response?.data?.message ||
             "Server is unreachable. Try again later",
         );
@@ -68,10 +68,10 @@ export const WishlistCartProvider = ({ children }) => {
         : [];
 
       setWishlist(cleanWishlist);
-      toast.success(message);
+      showSuccess(message);
     } catch (error) {
       console.error(error);
-      toast.error(
+      showError(
         error?.response?.data?.message ||
           "Server is unreachable. Try again later",
       );
@@ -86,12 +86,12 @@ export const WishlistCartProvider = ({ children }) => {
       setLoading(true);
       const updatedCart = await addToCartApi(productId);
       setCart(updatedCart);
-      toast.success("Added to cart");
+      showSuccess("Added to cart");
     } catch (error) {
       if (error?.response?.status === 409)
-        toast.error("Product already exists in cart");
+        showError("Product already exists in cart");
       else
-        toast.error(
+        showError(
           error?.response?.data?.message ||
             "Server is unreachable. Try again later",
         );
@@ -108,7 +108,7 @@ export const WishlistCartProvider = ({ children }) => {
       const updatedCart = await updateCartApi(productId, quantity);
       setCart(updatedCart);
     } catch (error) {
-      toast.error(
+      showError(
         error?.response?.data?.message ||
           "Server is unreachable. Try again later",
       );
@@ -124,9 +124,9 @@ export const WishlistCartProvider = ({ children }) => {
 
       const updatedCart = await removeFromCartApi(productId);
       setCart(updatedCart);
-      toast.success("Product removed from cart");
+      showSuccess("Product removed from cart");
     } catch (error) {
-      toast.error(
+      showError(
         error?.response?.data?.message ||
           "Server is unreachable. Try again later",
       );

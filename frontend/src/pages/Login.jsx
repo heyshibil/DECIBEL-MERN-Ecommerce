@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import LoginImage from "/src/assets/loginpage.webp";
 import { useAuth } from "../context/AuthContext";
-import toast from "react-hot-toast";
+import { showError, showSuccess } from "../utils/toastService";
 
 const Login = () => {
   const { login } = useAuth();
@@ -13,7 +13,7 @@ const Login = () => {
   useEffect(() => {
   const params = new URLSearchParams(window.location.search);
   if (params.get("message") === "blocked") {
-    toast.error("Access Denied: Your account has been suspended by the administrator.");
+    showError("Access Denied: Your account has been suspended by the administrator.");
   }
 }, []);
 
@@ -25,10 +25,10 @@ const Login = () => {
         const userData = await login({ email, password });
 
         if (userData.role === "user") {
-          toast.success(`Welcome back, ${userData.username}`);
+          showSuccess(`Welcome back, ${userData.username}`);
         }
       } catch (err) {
-        toast.error(err.message);
+        showError(err.message);
       }
     }
   };
