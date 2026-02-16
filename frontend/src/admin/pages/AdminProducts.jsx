@@ -14,7 +14,7 @@ const getImagePath = (imagePath) => {
 };
 
 const AdminProducts = () => {
-  const { stats, setStats } = useAdminStats();
+  const { stats, refreshStats } = useAdminStats();
   const products = stats.products;
 
   const emptyProduct = {
@@ -72,24 +72,21 @@ const AdminProducts = () => {
 
   // delete product
   const handleDeleteProduct = async (product) => {
-    if (!window.confirm(`Are you sure you want to delete ${product.productName}?`))
+    if (
+      !window.confirm(`Are you sure you want to delete ${product.productName}?`)
+    )
       return;
 
     try {
-      const response = await api.delete(`/products/${product.id}`);
+      const response = await api.delete(`/products/${product._id}`);
 
-      if (response.status === 200 || response.status === 201) {
+      if (response.status === 200) {
         toast.success("Product deleted successfully");
-
-        setStats((prev) => ({
-          ...prev,
-          products: prev.products.filter((item) => item.id !== product.id),
-          totalProducts: prev.totalProducts - 1,
-        }));
+        refreshStats();
       }
     } catch (error) {
       toast.error("Failed to delete the product");
-      console.error("Failed to delete product:",error);
+      console.error("Failed to delete product:", error);
     }
   };
 

@@ -3,6 +3,7 @@ import { FiUpload } from "react-icons/fi";
 import ManualDropdown from "./ManualDropdown";
 import api from "../../services/api";
 import { toast } from "react-toastify";
+import { useAdminStats } from "../context/AdminStatsContext";
 
 // Helper function to resolve image path (handles both Cloudinary URLs and relative paths)
 const getImagePath = (imagePath) => {
@@ -12,6 +13,7 @@ const getImagePath = (imagePath) => {
 };
 
 const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
+  const { refreshStats } = useAdminStats();
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -95,6 +97,7 @@ const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
       const response = await api.post("/products", formData);
 
       if (response.status === 201 || response.status === 200) {
+        refreshStats();
         toast.success("Product added to Decibel inventory!");
         onClose(false);
       }
@@ -107,15 +110,32 @@ const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
   // update edited product
   const handleUpdateProduct = async () => {
     try {
-      const response = await api.put(`/products/${newProduct.id}`, newProduct);
+      let payload;
 
-      if (response.status === 201 || response.status === 200) {
+      // if there is new image
+      if (imageFile) {
+        payload = new FormData();
+        Object.keys(newProduct).forEach((key) => {
+          // Don't set the old image string
+          if (key !== "image") payload.append(key, newProduct[key]);
+        });
+        // set new image string
+        payload.append("image", imageFile);
+      }
+      // No new image, send JSON
+      else {
+        payload = newProduct;
+      }
+
+      const response = await api.put(`/products/${newProduct._id}`, payload);
+      if (response.status === 200) {
+        refreshStats();
         toast.success("Product updated successfully");
         onClose(false);
       }
     } catch (error) {
       toast.error("Failed to update product");
-      console.error("Something went wrong while updating product:", error);
+      console.error(error);
     }
   };
 
@@ -141,7 +161,12 @@ const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
 
         {/* sku */}
         <div className="flex flex-col">
-          <label className="text-gray-500 text-sm mb-1">SKU {mode === "add" && <span className="text-xs text-gray-400">(Auto-generated)</span>}</label>
+          <label className="text-gray-500 text-sm mb-1">
+            SKU{" "}
+            {mode === "add" && (
+              <span className="text-xs text-gray-400">(Auto-generated)</span>
+            )}
+          </label>
           <input
             type="text"
             className="px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-700 disabled:bg-gray-200 disabled:cursor-not-allowed"
