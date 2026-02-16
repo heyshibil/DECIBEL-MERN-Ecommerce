@@ -5,17 +5,24 @@ const api = axios.create({
   timeout: 10000,
   withCredentials: true,
   headers: {
-    "Accept": "application/json",
+    Accept: "application/json",
   },
 });
 
 api.interceptors.response.use(
   (response) => response, //if responds succeed, return it
   (error) => {
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem("userInfo");
-      window.location.replace("/login");
+    const errorStatus = error.response ? error.response.status : null;
+
+    // Token expired or invalid
+    if (errorStatus === 401) {
     }
+
+    if (errorStatus === 403) {
+      localStorage.removeItem("userInfo");
+      window.location.replace("/login?message=blocked");
+    }
+
     return Promise.reject(error);
   },
 );
