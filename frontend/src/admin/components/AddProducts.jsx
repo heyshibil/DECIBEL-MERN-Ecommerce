@@ -4,6 +4,7 @@ import ManualDropdown from "./ManualDropdown";
 import api from "../../services/api";
 import { showError, showSuccess } from "../../utils/toastService";
 import { useAdminStats } from "../context/AdminStatsContext";
+import { toast } from "react-toastify";
 
 // Helper function to resolve image path (handles both Cloudinary URLs and relative paths)
 const getImagePath = (imagePath) => {
@@ -72,7 +73,7 @@ const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
     // missing field handling
     for (const field of requiredFields) {
       if (!newProduct[field] || newProduct[field].toString().trim() === "") {
-        toast.error(`Please fill ${field} field`);
+        showError(`Please fill ${field} field`);
         return;
       }
     }
@@ -98,11 +99,11 @@ const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
 
       if (response.status === 201 || response.status === 200) {
         refreshStats();
-        toast.success("Product added to Decibel inventory!");
+        showSuccess("Product added to Decibel inventory!");
         onClose(false);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Upload failed");
+      showError(error.response?.data?.message || "Upload failed");
       console.error("Failed to add products:", error);
     }
   };
@@ -130,11 +131,11 @@ const AddProducts = ({ mode, onClose, setNewProduct, newProduct }) => {
       const response = await api.put(`/products/${newProduct._id}`, payload);
       if (response.status === 200) {
         refreshStats();
-        toast.success("Product updated successfully");
+        showSuccess("Product updated successfully");
         onClose(false);
       }
     } catch (error) {
-      toast.error("Failed to update product");
+      showError("Failed to update product");
       console.error(error);
     }
   };
