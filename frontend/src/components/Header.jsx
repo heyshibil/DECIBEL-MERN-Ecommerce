@@ -18,7 +18,7 @@ import { MdLogout } from "react-icons/md";
 import { IoBagOutline } from "react-icons/io5";
 
 const Header = () => {
-  const { searchTerm,setSearchTerm } = useSearch();
+  const { searchTerm, setSearchTerm } = useSearch();
 
   const { user, logOut } = useAuth();
   const { wishlist, cart } = useWishlistCart();
@@ -49,6 +49,14 @@ const Header = () => {
     dropBox.classList.toggle("hidden");
   };
 
+  // handleSearchSubmit
+  const handleSearchSubmit = async (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      goProducts();
+    }
+  };
+
   return (
     // desk nav
     <nav className="fixed top-0 left-0 right-0 z-50">
@@ -71,19 +79,21 @@ const Header = () => {
             id="search-box"
             className="w-[400px] bg-white rounded-4xl border border-gray-200 h-10 px-1"
           >
-            <form className="flex items-center w-full h-full" action="">
+            <form
+              className="flex items-center w-full h-full"
+              onSubmit={handleSearchSubmit}
+            >
               <input
-                className="w-11/12 rounded-4xl outline-0 px-6"
+                className="w-11/12 rounded-4xl outline-0 px-6 focus:outline-none focus:ring-0 focus:border-transparent"
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 name="search"
                 placeholder="Search products"
               />
-              <IoSearch
-                className="p-1.5 w-8 text-sm h-8 rounded-full bg-black text-white cursor-pointer"
-                onClick={goProducts}
-              />
+              <button type="submit">
+                <IoSearch className="p-1.5 w-8 text-sm h-8 rounded-full bg-black text-white cursor-pointer" />
+              </button>
             </form>
           </div>
 
