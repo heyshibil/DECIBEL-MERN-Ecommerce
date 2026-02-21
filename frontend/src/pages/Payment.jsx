@@ -202,7 +202,7 @@ const Payment = () => {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-green-600 mb-2">
+              <h3 className="text-2xl font-bold text-green-600 mb-2 text-center">
                 Payment Successful!
               </h3>
               <p className="text-center text-gray-600 mb-4">

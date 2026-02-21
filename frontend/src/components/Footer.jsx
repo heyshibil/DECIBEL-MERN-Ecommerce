@@ -12,7 +12,7 @@ const Footer = () => {
   <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
 
     {/* Brand */}
-    <div>
+    <div className="md:text-left text-center">
       <h2 className="text-gray-900 font-extrabold text-3xl tracking-tight mb-4 cursor-pointer">
         DECIBEL.
       </h2>
@@ -22,7 +22,7 @@ const Footer = () => {
     </div>
 
     {/* Shop */}
-    <div>
+    <div className="md:text-left text-center">
       <h3 className="text-gray-900 font-semibold text-lg mb-4">Shop</h3>
       <ul className="space-y-2">
         <li className="hover:text-gray-900 cursor-pointer">Headphones</li>
@@ -33,7 +33,7 @@ const Footer = () => {
     </div>
 
     {/* Support */}
-    <div>
+    <div className="md:text-left text-center">
       <h3 className="text-gray-900 font-semibold text-lg mb-4">Support</h3>
       <ul className="space-y-2">
         <li className="hover:text-gray-900 cursor-pointer">Order Tracking</li>
@@ -44,9 +44,9 @@ const Footer = () => {
     </div>
 
     {/* Social */}
-    <div>
+    <div className="md:text-left text-center">
       <h3 className="text-gray-900 font-semibold text-lg mb-4">Connect</h3>
-      <div className="flex items-center gap-6 text-2xl text-gray-700">
+      <div className="flex items-center justify-center md:justify-start gap-6 text-2xl text-gray-700">
         <FaInstagram className="cursor-pointer hover:text-gray-900" />
         <PiXLogoBold className="cursor-pointer hover:text-gray-900" />
         <FaLinkedinIn className="cursor-pointer hover:text-gray-900" />

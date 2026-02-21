@@ -41,7 +41,8 @@ const Products = () => {
 
   // toggle filter menu
   const toggleFilterMenu = () => {
-    document.getElementById("filter").classList.toggle("hidden");
+    const topFilter = document.getElementById("filter");
+    if (topFilter) topFilter.classList.toggle("hidden");
   };
 
   const finalProducts = searchTerm.trim() ? results : products;
@@ -79,7 +80,8 @@ const Products = () => {
     }
 
     setFilter(filtered);
-    document.getElementById("filter").classList.add("hidden");
+    const topFilter = document.getElementById("filter");
+    if (topFilter) topFilter.classList.add("hidden");
   };
 
   // Clear all filters
@@ -101,13 +103,13 @@ const Products = () => {
     <div className="relative w-full min-h-screen lg:pt-24 pb-12 lg:pb-24">
       <Header />
       <div className="w-11/12 mx-auto pt-6 lg:pt-12">
-        <div className="w-full flex justify-between items-center">
+        <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="w-fit">
             <SubHead head="All Products" />
             <div className="bg-brand h-[1.5px]" />
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             {isFiltering && (
               <button
                 onClick={handleClearFilters}
@@ -186,7 +188,7 @@ const Products = () => {
             </div>
           </div>
         ) : (
-          <div className="mt-6 lg:mt-12 grid grid-cols-1 lg:grid-cols-4 gap-5 lg:gap-10 w-[1fr, 1fr, 1fr, 1fr]">
+          <div className="mt-6 lg:mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-10">
             {filter.map((product) => {
               return (
                 <Card

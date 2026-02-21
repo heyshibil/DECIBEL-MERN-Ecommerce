@@ -9,7 +9,7 @@ import { MdOutlineWorkspacePremium } from "react-icons/md";
 const Features = () => {
   return (
     <div id='features-sec' className='w-full mt-6'>
-     <SubHead head="Decibal Guarantee" sub="Trusted By Sound Lovers" />
+     <SubHead head="Decibal Guarantee" sub="Trusted By Sound Lovers" showOnMobile={true} />
 
      <div id="features-grid" className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 lg:mt-12">
 

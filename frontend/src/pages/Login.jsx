@@ -34,26 +34,26 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-screen flex">
-      <div className="w-1/2 lg:px-12 lg:py-6">
+    <div className="w-full min-h-screen flex flex-col lg:flex-row">
+      <div className="w-full lg:w-1/2 px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-6">
         <div className="max-w-md mx-auto text-left flex flex-col h-full justify-center">
           <p
             id="logo-text"
-            className="font-bold text-3xl tracking-tighter cursor-pointer mb-10"
+            className="font-bold text-2xl sm:text-3xl tracking-tighter cursor-pointer mb-6 sm:mb-10"
           >
             DECIBEL.
           </p>
 
           <div className="mt-4">
-            <h2 className="text-3xl font-semibold text-gray-900 mb-6">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-4 sm:mb-6">
               Welcome Back, Homie
             </h2>
-            <form className="space-y-5" onSubmit={handleSubmit}>
+            <form className="space-y-4 sm:space-y-5" onSubmit={handleSubmit}>
               <div>
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 sm:py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-black"
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
@@ -63,7 +63,7 @@ const Login = () => {
                 <input
                   type="password"
                   placeholder="Password"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 sm:py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-black"
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
@@ -71,7 +71,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full bg-black text-white py-2 rounded-lg font-medium hover:bg-gray-900 transition-all"
+                className="w-full bg-black text-white py-2.5 sm:py-2 rounded-lg text-sm sm:text-base font-medium hover:bg-gray-900 transition-all"
               >
                 Sign In
               </button>
@@ -87,7 +87,7 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="w-1/2">
+      <div className="hidden lg:block w-1/2">
         <img className="w-full h-full object-cover" src={LoginImage} alt="" />
       </div>
     </div>

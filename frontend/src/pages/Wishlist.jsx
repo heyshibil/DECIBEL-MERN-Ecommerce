@@ -39,7 +39,7 @@ const Wishlist = () => {
           </div>
         </div>
         {wishlist.length == 0 && <EmptyMessage messageType="Wishlist" />}
-        <div className="mt-6 lg:mt-12 grid grid-cols-1 lg:grid-cols-4 gap-5 lg:gap-10 w-[1fr, 1fr, 1fr, 1fr]">
+        <div className="mt-6 lg:mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-10">
           {wishlist.map((item) => {
             return (
               <Card

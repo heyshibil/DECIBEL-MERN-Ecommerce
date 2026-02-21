@@ -95,11 +95,11 @@ const User = () => {
     <div className="relative min-h-screen w-full lg:pt-24 pb-12 lg:pb-24 bg-gray-50">
       <Header />
       <div className="w-11/12 mx-auto pt-6 lg:pt-12">
-        <div className="w-full flex justify-between items-center mb-8">
-          {/* <div className="w-fit">
+        <div className="w-full flex justify-between items-center mb-6 lg:mb-12">
+          <div className="w-fit">
             <SubHead head="My Profile" />
             <div className="bg-brand h-[1.5px]" />
-          </div> */}
+          </div>
         </div>
 
         {/* Profile Card */}
