@@ -37,7 +37,7 @@ const Login = () => {
     <div className="w-full min-h-screen lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row bg-[url('/src/assets/audio_doodle_bg.png')] bg-cover bg-center lg:bg-none lg:bg-white relative">
       <div className="flex-1 flex flex-col justify-center w-full lg:w-1/2 px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-6 relative z-10 lg:h-full lg:overflow-y-auto">
         {/* Mobile: Glass Card. Desktop: Clean White */}
-        <div className="w-full max-w-md mx-auto text-center lg:text-left flex flex-col justify-center bg-white/10 lg:bg-transparent p-8 sm:p-10 lg:p-0 rounded-2xl shadow-lg lg:shadow-none border border-white/20 lg:border-none backdrop-blur-xl lg:backdrop-blur-none">
+        <div className="w-full max-w-md mx-auto text-center lg:text-left flex flex-col justify-center bg-slate-50/5 opacity-90 lg:bg-transparent p-8 sm:p-10 lg:p-0 rounded-2xl shadow-lg lg:shadow-none border border-white/20 lg:border-none backdrop-blur-xl lg:backdrop-blur-none">
           <p
             id="logo-text"
             className="font-bold text-2xl sm:text-3xl tracking-tighter cursor-pointer mb-6 sm:mb-10 text-white lg:text-black"
