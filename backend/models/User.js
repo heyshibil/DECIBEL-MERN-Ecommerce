@@ -21,6 +21,7 @@ const userSchema = mongoose.Schema(
         quantity: { type: Number, min: 1, default: 1 },
       },
     ],
+    refreshToken: { type: String },
   },
   { timestamps: true },
 );
