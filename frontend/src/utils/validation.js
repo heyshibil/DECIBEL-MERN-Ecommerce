@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { strictEmail } from "./strictEmail";
 
 export const registerSchema = z
   .object({
     username: z
       .string()
       .min(3, { message: "Username must be atleast 3 characters" }),
-    email: z.string().email({ message: "Invalid email format" }),
+    email: strictEmail,
     password: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" })
@@ -21,6 +22,6 @@ export const registerSchema = z
   });
 
 export const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email format" }),
+  email: strictEmail,
   password: z.string().min(1, { message: "Password is required" }),
 });
