@@ -77,13 +77,20 @@ const Login = () => {
                 Sign In
               </button>
             </form>
-
-            <p className="text-sm text-gray-300 lg:text-gray-500 mt-6 lg:text-left">
+            <div className="w-full flex justify-between">
+               <p className="text-sm text-gray-300 lg:text-gray-500 mt-6 lg:text-left">
               Don’t have an account?{" "}
               <Link to="/register" className="text-white lg:text-black hover:underline font-semibold lg:font-medium">
                 Sign up
               </Link>
             </p>
+            <p className="text-sm text-gray-300 underline lg:text-gray-500 mt-6 lg:text-left">
+              <Link to="/forgot-password" className="text-white lg:text-gray-500  font-semibold lg:font-medium">
+                forgot password
+              </Link>
+            </p>
+            </div>
+           
           </div>
         </div>
       </div>
