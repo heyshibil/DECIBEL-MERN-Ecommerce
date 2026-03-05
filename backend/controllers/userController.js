@@ -121,7 +121,7 @@ export const resendOtp = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     if (user.isVerified)
       return res
-        .status(404)
+        .status(400)
         .json({ message: "Email is already verified, Please login" });
 
     // backend throttling minimum 1min b/w OTPs
