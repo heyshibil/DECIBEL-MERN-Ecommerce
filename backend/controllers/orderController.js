@@ -34,7 +34,7 @@ export const createOrder = async (req, res) => {
     }
 
     //generate custom orderId
-    const generatedOrderId = `ORD-${Date.now().toString().slice(-3)}${Math.random().toString(36).toUpperCase().slice(-3)}`;
+    const generatedOrderId = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
 
     const orderItems = items.map((item) => ({
       product: item.product._id,
