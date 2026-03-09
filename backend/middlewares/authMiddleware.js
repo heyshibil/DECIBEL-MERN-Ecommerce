@@ -21,10 +21,14 @@ export const protect = async (req, res, next) => {
         // make tokens expire
         res.cookie("accessToken", "", {
           httpOnly: true,
+          secure: true,
+          sameSite: true,
           expires: new Date(0),
         });
         res.cookie("refreshToken", "", {
           httpOnly: true,
+          secure: true,
+          sameSite: true,
           expires: new Date(0),
         });
 

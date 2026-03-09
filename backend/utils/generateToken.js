@@ -14,7 +14,7 @@ export const generateTokens = (res, userId) => {
   // Access-token cookie
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development", //use secure cookies in production,
+    secure: true,
     sameSite: "None",
     maxAge: 15 * 60 * 1000,
   });
@@ -22,7 +22,7 @@ export const generateTokens = (res, userId) => {
   // Refresh-token cookie
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
+    secure: true,
     sameSite: "None",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
