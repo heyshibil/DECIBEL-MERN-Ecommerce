@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 const VerifyEmail = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
 
   // resend timer
   const [resendTimer, setResendTimer] = useState(60);
@@ -62,10 +63,14 @@ const VerifyEmail = () => {
 
   const handleResend = async (e) => {
     e.preventDefault();
-    await resendOtpRequest(email);
-
-    // Reset timer
-    setResendTimer(60)
+    try {
+      setIsResending(true);
+      await resendOtpRequest(email);
+    } finally {
+      setIsResending(false);
+      // Reset timer
+      setResendTimer(60);
+    }
   };
 
   // handle submit
@@ -150,11 +155,20 @@ const VerifyEmail = () => {
         <p className="text-sm text-gray-500 mt-8">
           Didn't receive the code?{" "}
           <button
-            disabled={resendTimer > 0}
-            className="text-black font-semibold hover:underline focus:outline-none"
-            onClick={handleResend} // Placeholder for future feature
+            disabled={resendTimer > 0 || isResending}
+            className="text-black font-semibold hover:underline focus:outline-none disabled:opacity-50"
+            onClick={handleResend}
           >
-            {resendTimer > 0 ? `Resend in ${resendTimer}s` : `Resend`}
+            {isResending ? (
+              <span className="flex items-center gap-1">
+                <span className="w-3 h-3 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></span>
+                Sending...
+              </span>
+            ) : resendTimer > 0 ? (
+              `Resend in ${resendTimer}s`
+            ) : (
+              "Resend"
+            )}
           </button>
         </p>
       </div>

@@ -15,16 +15,22 @@ const Orders = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const [orderId, setOrderId] = useState(null);
+  const [cancellingId, setCancellingId] = useState(null);
 
   const handleCancelOrder = (orderId) => {
     setShowAlert(true);
     setOrderId(orderId);
   };
 
-  const confirmCancelOrder = () => {
-    cancelOrder(orderId);
+  const confirmCancelOrder = async () => {
     setShowAlert(false);
-    setOrderId(null);
+    setCancellingId(orderId);
+    try {
+      await cancelOrder(orderId);
+    } finally {
+      setCancellingId(null);
+      setOrderId(null);
+    }
   };
 
   if (loading) {
@@ -134,9 +140,17 @@ const Orders = () => {
                   >
                     <button
                       onClick={() => handleCancelOrder(order._id)}
-                      className="px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-500/85 transition-colors"
+                      disabled={cancellingId === order._id}
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-500/85 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
                     >
-                      Cancel Order
+                      {cancellingId === order._id ? (
+                        <>
+                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                          Cancelling...
+                        </>
+                      ) : (
+                        "Cancel Order"
+                      )}
                     </button>
                   </div>
                 </div>

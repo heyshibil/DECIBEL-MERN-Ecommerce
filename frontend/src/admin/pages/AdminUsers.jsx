@@ -11,6 +11,7 @@ const AdminUsers = () => {
   const { stats, loading, refreshStats } = useAdminStats();
   const [usersList, setUsersList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [blockingId, setBlockingId] = useState(null);
 
   // fetch users
   useEffect(() => {
@@ -20,6 +21,7 @@ const AdminUsers = () => {
   // toggle block
   const toggleBlock = async (userId, currentBlockStatus) => {
     try {
+      setBlockingId(userId);
       const response = await api.patch(`/users/block/${userId}`, {
         isBlocked: !currentBlockStatus,
       });
@@ -32,6 +34,8 @@ const AdminUsers = () => {
     } catch (error) {
       showError(error.response?.data?.message || "Failed to update user status");
       console.error("Failed to update:", error);
+    } finally {
+      setBlockingId(null);
     }
   };
 
@@ -113,19 +117,24 @@ const AdminUsers = () => {
                 <td className="py-3 text-center">
                   <button
                     onClick={() => toggleBlock(user._id, user.isBlocked)}
-                    className={`w-40 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium shadow-sm transition
+                    disabled={blockingId === user._id}
+                    className={`w-40 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium shadow-sm transition disabled:opacity-60 disabled:cursor-not-allowed
     ${
       user.isBlocked
         ? "bg-red-500 text-white hover:bg-red-600"
         : "bg-indigo-600 text-white hover:bg-indigo-700"
     }`}
                   >
-                    {user.isBlocked ? (
+                    {blockingId === user._id ? (
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    ) : user.isBlocked ? (
                       <FiUnlock size={16} />
                     ) : (
                       <FiLock size={16} />
                     )}
-                    {user.isBlocked ? "Unblock" : "Block"}
+                    {blockingId === user._id
+                      ? user.isBlocked ? "Unblocking..." : "Blocking..."
+                      : user.isBlocked ? "Unblock" : "Block"}
                   </button>
                 </td>
               </tr>

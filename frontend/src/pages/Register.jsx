@@ -13,6 +13,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   // const { goVerifyEmail } = useAppNavigation();
   const navigate = useNavigate();
 
@@ -20,6 +21,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
+      setIsLoading(true);
       const registeredMail = await register({
         username,
         email,
@@ -35,6 +37,8 @@ const Register = () => {
     } catch (error) {
       console.error(error);
       showError("Failed to register. Please try again");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -101,9 +105,21 @@ const Register = () => {
               </div>
               <button
                 type="submit"
-                className="w-full bg-white lg:bg-black text-black lg:text-white py-3 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-200 lg:hover:bg-gray-900 transition-all mt-2"
+                disabled={isLoading}
+                className={`w-full py-3 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold transition-all mt-2 ${
+                  isLoading
+                    ? "bg-gray-200 lg:bg-gray-700 text-gray-400 lg:text-gray-300 cursor-not-allowed"
+                    : "bg-white lg:bg-black text-black lg:text-white hover:bg-gray-200 lg:hover:bg-gray-900"
+                }`}
               >
-                Sign up
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-gray-400 lg:border-gray-300 border-t-transparent rounded-full animate-spin"></span>
+                    Creating account...
+                  </span>
+                ) : (
+                  "Sign up"
+                )}
               </button>
             </form>
 

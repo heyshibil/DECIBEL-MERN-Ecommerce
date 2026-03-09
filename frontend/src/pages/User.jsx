@@ -13,7 +13,8 @@ import { useOrders } from "../context/OrdersContext";
 import { useAppNavigation } from "../hooks/useAppNavigation";
 import { mirage } from "ldrs";
 
-mirage.register();
+// mirage only needed if you re-add full-screen loader
+// mirage.register();
 
 const User = () => {
   const { user, updateUser } = useAuth();
@@ -83,13 +84,6 @@ const User = () => {
     setEditingEmail(false);
   };
 
-  if (saving) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <l-mirage size="60" speed="2.5" color="black"></l-mirage>
-      </div>
-    );
-  }
 
   return (
     <div className="relative min-h-screen w-full lg:pt-24 pb-12 lg:pb-24 bg-gray-50">
@@ -147,9 +141,17 @@ const User = () => {
                   <div className="flex gap-3">
                     <button
                       onClick={handleSaveUsername}
-                      className="flex-1 px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-900 transition-colors"
+                      disabled={saving}
+                      className="flex-1 px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-900 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      Save
+                      {saving ? (
+                        <>
+                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                          Saving...
+                        </>
+                      ) : (
+                        "Save"
+                      )}
                     </button>
                     <button
                       onClick={handleCancelUsername}
@@ -193,9 +195,17 @@ const User = () => {
                   <div className="flex gap-3">
                     <button
                       onClick={handleSaveEmail}
-                      className="flex-1 px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-900 transition-colors"
+                      disabled={saving}
+                      className="flex-1 px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-900 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      Save
+                      {saving ? (
+                        <>
+                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                          Saving...
+                        </>
+                      ) : (
+                        "Save"
+                      )}
                     </button>
                     <button
                       onClick={handleCancelEmail}

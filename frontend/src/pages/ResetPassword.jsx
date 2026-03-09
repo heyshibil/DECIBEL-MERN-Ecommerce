@@ -8,6 +8,7 @@ const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
 
   const inputRefs = useRef([]);
@@ -57,12 +58,15 @@ const ResetPassword = () => {
   const handleResend = async (e) => {
     e.preventDefault();
     try {
+      setIsResending(true);
       await api.post("/users/forgot-password", { email });
       showSuccess("A new reset code has been sent to your email.");
       setResendTimer(60);
     } catch (error) {
       const errorMsg = error?.response?.data?.message;
       showError(errorMsg || "Failed to resend code. Try again later.");
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -187,11 +191,20 @@ const ResetPassword = () => {
         <p className="text-sm text-gray-500 mt-8">
           Didn't receive the code?{" "}
           <button
-            disabled={resendTimer > 0}
-            className="text-black font-semibold hover:underline focus:outline-none"
+            disabled={resendTimer > 0 || isResending}
+            className="text-black font-semibold hover:underline focus:outline-none disabled:opacity-50"
             onClick={handleResend}
           >
-            {resendTimer > 0 ? `Resend in ${resendTimer}s` : "Resend"}
+            {isResending ? (
+              <span className="flex items-center gap-1">
+                <span className="w-3 h-3 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></span>
+                Sending...
+              </span>
+            ) : resendTimer > 0 ? (
+              `Resend in ${resendTimer}s`
+            ) : (
+              "Resend"
+            )}
           </button>
         </p>
       </div>

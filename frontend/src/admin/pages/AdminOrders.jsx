@@ -11,6 +11,7 @@ const AdminOrders = () => {
   const { stats, refreshStats, loading } = useAdminStats();
   const [ordersList, setOrdersList] = useState(stats.orders || []);
   const [searchQuery, setSearchQuery] = useState("");
+  const [updatingId, setUpdatingId] = useState(null);
 
   // filteringOrderdes according to searchTerm
   const filteredOrders = useMemo(() => {
@@ -31,6 +32,7 @@ const AdminOrders = () => {
   // handle status
   const handleStatusChange = async (newStatus, orderId) => {
     try {
+      setUpdatingId(orderId);
       const response = await api.patch(`/orders/${orderId}`, {
         status: newStatus,
       });
@@ -42,6 +44,8 @@ const AdminOrders = () => {
     } catch (error) {
       showError("Failed to update status");
       console.error("Failed to update order status:", error);
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -135,6 +139,8 @@ const AdminOrders = () => {
                         onChange={(newStatus) =>
                           handleStatusChange(newStatus, order._id)
                         }
+                        disabled={updatingId === order._id}
+                        isUpdating={updatingId === order._id}
                       />
                     </td>
                   </tr>

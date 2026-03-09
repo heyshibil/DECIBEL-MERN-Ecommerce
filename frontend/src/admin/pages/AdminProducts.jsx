@@ -49,6 +49,7 @@ const AdminProducts = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const filteredProducts = (products || []).filter((product) => {
@@ -81,6 +82,7 @@ const AdminProducts = () => {
       return;
 
     try {
+      setDeletingId(product._id);
       const response = await api.delete(`/products/${product._id}`);
 
       if (response.status === 200) {
@@ -90,6 +92,8 @@ const AdminProducts = () => {
     } catch (error) {
       showError("Failed to delete the product");
       console.error("Failed to delete product:", error);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -181,16 +185,22 @@ const AdminProducts = () => {
                   {" "}
                   <div className="flex items-center justify-center gap-4">
                     <button
-                      className="text-blue-400 hover:text-blue-500"
+                      className="text-blue-400 hover:text-blue-500 disabled:opacity-40"
                       onClick={() => handleEditProduct(product)}
+                      disabled={deletingId === product._id}
                     >
                       <FiEdit size={18} />
                     </button>
                     <button
-                      className="text-red-400 hover:text-red-500"
+                      className="text-red-400 hover:text-red-500 disabled:opacity-40"
                       onClick={() => handleDeleteProduct(product)}
+                      disabled={deletingId === product._id}
                     >
-                      <FiTrash2 size={18} />
+                      {deletingId === product._id ? (
+                        <span className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin inline-block"></span>
+                      ) : (
+                        <FiTrash2 size={18} />
+                      )}
                     </button>
                   </div>
                 </td>

@@ -9,6 +9,7 @@ const Login = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // show toast for 403 status 
   useEffect(() => {
@@ -23,6 +24,7 @@ const Login = () => {
 
     if (email && password) {
       try {
+        setIsLoading(true);
         const userData = await login({ email, password });
 
         if (userData && userData?.role === "user") {
@@ -30,6 +32,8 @@ const Login = () => {
         }
       } catch (err) {
         showError(err.message);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -78,9 +82,21 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full bg-white lg:bg-black text-black lg:text-white py-3 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-200 lg:hover:bg-gray-900 transition-all mt-2"
+                disabled={isLoading}
+                className={`w-full py-3 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold transition-all mt-2 ${
+                  isLoading
+                    ? "bg-gray-200 lg:bg-gray-700 text-gray-400 lg:text-gray-300 cursor-not-allowed"
+                    : "bg-white lg:bg-black text-black lg:text-white hover:bg-gray-200 lg:hover:bg-gray-900"
+                }`}
               >
-                Sign In
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-gray-400 lg:border-gray-300 border-t-transparent rounded-full animate-spin"></span>
+                    Signing in...
+                  </span>
+                ) : (
+                  "Sign In"
+                )}
               </button>
             </form>
             <div className="w-full flex justify-between">
