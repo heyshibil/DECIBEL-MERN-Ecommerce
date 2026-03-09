@@ -1,15 +1,32 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Create reusable transporter using Gmail SMTP
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD, // App Password, NOT your Gmail password
+  },
+});
 
-//  Verification email
+// Anti-spam: shared mail options base
+const baseMailOptions = {
+  from: `"DECIBEL Audio" <${process.env.GMAIL_USER}>`,
+  headers: {
+    "X-Mailer": "DECIBEL Mailer",
+    Precedence: "transactional",
+  },
+};
+
+// Verification email
 export const sendVerificationEmail = async (email, otp) => {
   try {
-    const { data, error } = await resend.emails.send({
-      // Use 'onboarding@resend.dev' if you haven't verified a custom domain yet
-      from: "DECIBEL <onboarding@resend.dev>",
-      to: [email],
+    await transporter.sendMail({
+      ...baseMailOptions,
+      to: email,
       subject: "Verify Your DECIBEL Account",
+      // Plain text fallback (critical for spam prevention)
+      text: `Welcome to DECIBEL!\n\nYour email verification code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't create a DECIBEL account, please ignore this email.`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; border: 1px solid #e5e7eb; border-radius: 10px;">
           <h2 style="color: #111827;">Welcome to DECIBEL!</h2>
@@ -24,15 +41,8 @@ export const sendVerificationEmail = async (email, otp) => {
         </div>
       `,
     });
-
-    if (error) {
-      console.error("Resend API Error:", error);
-      throw new Error("Failed to send email via Resend");
-    }
-
-    return data;
   } catch (err) {
-    console.error("Email Service Error:", err);
+    console.error("Verification Email Error:", err);
     throw err;
   }
 };
@@ -40,10 +50,12 @@ export const sendVerificationEmail = async (email, otp) => {
 // Password Reset email
 export const sendPasswordResetEmail = async (email, otp) => {
   try {
-    const { data, error } = await resend.emails.send({
-      from: "DECIBEL <onboarding@resend.dev>",
-      to: [email],
+    await transporter.sendMail({
+      ...baseMailOptions,
+      to: email,
       subject: "Reset Your DECIBEL Password",
+      // Plain text fallback (critical for spam prevention)
+      text: `Password Reset Request\n\nYour password reset code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; border: 1px solid #e5e7eb; border-radius: 10px;">
           <h2 style="color: #111827;">Password Reset Request</h2>
@@ -58,13 +70,6 @@ export const sendPasswordResetEmail = async (email, otp) => {
         </div>
       `,
     });
-
-    if (error) {
-      console.error("Resend API Error:", error);
-      throw new Error("Failed to send password reset email");
-    }
-
-    return data;
   } catch (err) {
     console.error("Password Reset Email Error:", err);
     throw err;
