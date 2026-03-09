@@ -22,13 +22,13 @@ export const protect = async (req, res, next) => {
         res.cookie("accessToken", "", {
           httpOnly: true,
           secure: true,
-          sameSite: true,
+          sameSite: "None",
           expires: new Date(0),
         });
         res.cookie("refreshToken", "", {
           httpOnly: true,
           secure: true,
-          sameSite: true,
+          sameSite: "None",
           expires: new Date(0),
         });
 
