@@ -13,12 +13,20 @@ import { cloudinaryConfig } from "./config/cloudinary.js";
 await connectDB();
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Initialize Cloudinary
 cloudinaryConfig();
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+// CORS
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  }),
+);
+
+// middlewares
 app.use(express.json());
 app.use(cookieParser());
 

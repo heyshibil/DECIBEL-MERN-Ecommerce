@@ -211,17 +211,19 @@ export const logoutUser = async (req, res) => {
   }
 
   // expires tokens //
-  res.cookie("accessToken", "", {
-    httpOnly: true,
-    sameSite: "None",
-    expires: new Date(0),
-  });
+    res.cookie("accessToken", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      expires: new Date(0),
+    });
 
-  res.cookie("refreshToken", "", {
-    httpOnly: true,
-    sameSite: "None",
-    expires: new Date(0),
-  });
+    res.cookie("refreshToken", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      expires: new Date(0),
+    });
 
   res.status(200).json({ message: "Logged out successfully" });
 };
@@ -258,8 +260,8 @@ export const refreshAccessToken = async (req, res) => {
     // set new accessToken cookie
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
+      secure: true,
+      sameSite: "None",
       maxAge: 15 * 60 * 1000, //15min
     });
 

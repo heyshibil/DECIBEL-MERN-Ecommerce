@@ -1,6 +1,19 @@
 import { Product } from "../models/Product.js";
 import { v2 as cloudinary } from "cloudinary";
-import fs from "node:fs";
+
+// Helper: upload a buffer to Cloudinary using an upload stream
+const uploadBufferToCloudinary = (buffer, options = {}) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "decibel_audio", resource_type: "auto", ...options },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      },
+    );
+    stream.end(buffer);
+  });
+};
 
 // GET all products
 export const getAllProducts = async (req, res) => {
@@ -63,14 +76,8 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ message: "Please upload a product image" });
     }
 
-    // Manual Upload to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-      folder: "decibel_audio",
-      resource_type: "auto",
-    });
-
-    // Remove the file from 'uploads' after Cloudinary is done
-    fs.unlinkSync(req.file.path);
+    // Upload buffer directly to Cloudinary (no disk involved)
+    const uploadResult = await uploadBufferToCloudinary(req.file.buffer);
 
     // Generate unique SKU
     const sku = `PROD-${Date.now().toString().slice(-4)}`;
@@ -94,15 +101,6 @@ export const createProduct = async (req, res) => {
     const createdProduct = await product.save();
     return res.status(201).json(createdProduct);
   } catch (error) {
-    // If Cloudinary fails, try to clean up the local file anyway
-    if (req.file) {
-      try {
-        fs.unlinkSync(req.file.path);
-      } catch (unlinkError) {
-        console.error("Error deleting file:", unlinkError);
-      }
-    }
-
     console.error("Product creation error:", {
       message: error.message,
       stack: error.stack,
@@ -135,13 +133,8 @@ export const updateProduct = async (req, res) => {
         await cloudinary.uploader.destroy(existingProduct.cloudinary_id);
       }
 
-      // upload new image
-      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-        folder: "decibel_audio",
-      });
-
-      // cleanup local temp file
-      fs.unlinkSync(req.file.path);
+      // upload new image buffer to cloudinary
+      const uploadResult = await uploadBufferToCloudinary(req.file.buffer);
 
       updateData.image = uploadResult.secure_url;
       updateData.cloudinary_id = uploadResult.public_id;
@@ -160,8 +153,6 @@ export const updateProduct = async (req, res) => {
 
     return res.status(200).json(updatedProduct);
   } catch (error) {
-    if (req.file) fs.unlinkSync(req.file.path);
-
     console.error("Update Error:", error);
     return res
       .status(500)

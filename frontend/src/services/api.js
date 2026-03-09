@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
   timeout: 10000,
   withCredentials: true,
   headers: {
@@ -19,7 +19,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await axios.get("http://localhost:5000/api/users/refresh", {
+        await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/users/refresh`, {
           withCredentials: true,
         });
 
