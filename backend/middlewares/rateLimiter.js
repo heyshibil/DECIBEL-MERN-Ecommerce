@@ -1,13 +1,12 @@
-import { rateLimit } from "express-rate-limit";
+import { ipKeyGenerator, rateLimit } from "express-rate-limit";
 
 export const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   limit: 5,
   standardHeaders: "draft-8",
   legacyHeaders: false,
-  ipv6Subnet: 56,
   keyGenerator: (req) => {
-    return req.body?.email || req.ip;
+    return req.body?.email || ipKeyGenerator(req);
   },
   message: {
     message: "Too many login attempts. Please try again after 15 minutes.",
