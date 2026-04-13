@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "https://decibel-mern-ecommerce-backend.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 60000,
   withCredentials: true,
   headers: {
@@ -19,7 +19,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await axios.get(`${import.meta.env.VITE_API_URL || "https://decibel-mern-ecommerce-backend.onrender.com/api"}/users/refresh`, {
+        await axios.get(`${import.meta.env.VITE_API_URL}/users/refresh`, {
           withCredentials: true,
         });
 
