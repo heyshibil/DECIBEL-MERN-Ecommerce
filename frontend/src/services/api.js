@@ -19,7 +19,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/users/refresh`, {
+        await axios.get(`${import.meta.env.VITE_API_URL || "https://decibel-mern-ecommerce-backend.onrender.com/api"}/users/refresh`, {
           withCredentials: true,
         });
 
