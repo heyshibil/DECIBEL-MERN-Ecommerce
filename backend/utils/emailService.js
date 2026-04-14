@@ -2,19 +2,18 @@ import nodemailer from "nodemailer";
 
 // Create reusable transporter using Gmail SMTP
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: "smtp-relay.brevo.com",
   port: 587,
   secure: false,
-  family: 4,
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD, // App Password, NOT your Gmail password
+    user: process.env.BREVO_API_USER,
+    pass: process.env.BREVO_API_KEY,
   },
 });
 
 // Anti-spam: shared mail options base
 const baseMailOptions = {
-  from: `"DECIBEL Audio" <${process.env.GMAIL_USER}>`,
+  from: `"DECIBEL Audio" <${process.env.BREVO_SENDER}>`,
   headers: {
     "X-Mailer": "DECIBEL Mailer",
     Precedence: "transactional",
