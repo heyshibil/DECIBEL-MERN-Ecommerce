@@ -63,8 +63,6 @@ npm run dev
 ```
 Email: testdecibel@yopmail.com
 Password: Test1234
-
-Role: Admin (for testing admin features)
 ```
 
 ---
