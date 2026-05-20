@@ -72,7 +72,14 @@ I utilized a modular MERN stack architecture to keep the codebase scalable. The 
 
 **Prerequisites:** You need Node.js (v18+) and MongoDB installed on your machine.
 
-**1. Clone and set up the backend:**
+**1. Clone and set up the frontend:**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+**2. Setup backend:**
 ```bash
 cd backend
 npm install
